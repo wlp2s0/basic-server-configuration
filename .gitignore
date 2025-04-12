@@ -3,3 +3,4 @@
 temp_ssh_keys/
 .vagrant/
 .vagrant
+venv-ansible

@@ -34,6 +34,18 @@
         state: started
         enabled: yes
 
+    # Install apt-listbugs to avoid installing buggy packages
+    - name: Install apt-listbugs
+      ansible.builtin.apt:
+        name: apt-listbugs
+        state: present
+
+    # Install apt-listchanges to review package changes during upgrades
+    - name: Install apt-listchanges
+      ansible.builtin.apt:
+        name: apt-listchanges
+        state: present
+
     # Root user SSH setup
     - name: Create SSH directory for the root user
       file:
@@ -196,6 +208,22 @@
         name: unattended-upgrades
         state: started
         enabled: yes
+
+    # Install Lynis for security auditing
+    - name: Install latest Lynis from GitHub
+      ansible.builtin.git:
+        repo: 'https://github.com/CISOfy/lynis.git'
+        dest: /opt/lynis
+        version: master
+      tags: lynis
+
+    - name: Symlink lynis to /usr/local/bin
+      ansible.builtin.file:
+        src: /opt/lynis/lynis
+        dest: /usr/local/bin/lynis
+        state: link
+        force: yes
+      tags: lynis
 
   handlers:
     - name: restart ssh
